@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Food{% endblock %}
+
+{% block body %}
+       
+    <div class="container pt-5">
+
+        <div class="row">
+
+            <div class="col-sm-1"></div>
+
+            <div class="col-sm-4 pt-2 pb-2 bg-secondary text-white">
+                <h2>Add New Food</h2>
+                {% for message in app.flashes('notice') %} <!-- Displaying flash with notice-->
+                <div class="alert alert-success">
+                        {{ message }}
+                </div>
+                {% endfor %}
+                {{ form_start(form) }}
+                {{ form_widget(form.name) }}
+                {{ form_widget(form.price) }}
+                {{ form_widget(form.submit) }}
+                {{ form_end(form) }}
+            </div>
+
+            <div class="col-sm-2"></div>
+
+            <div class="col-sm-4 pt-2 pb-2 bg-secondary text-white">
+                 <h2>Search for Food</h2>
+                {{ form_start(form2) }}
+                {{ form_widget(form2.id)}}
+                {{ form_widget(form2.name) }}
+                {{ form_widget(form2.price) }}
+                {{ form_widget(form2.search) }}
+                {{ form_end(form2) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
