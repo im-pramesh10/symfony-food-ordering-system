@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Food;
 use App\Form\AddFoodType;
+use App\Form\SearchFoodType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,66 +16,126 @@ class FoodController extends AbstractController
     /**
      * @Route("/food", name="app_food")
      */
-    public function addFood(Request $request, ManagerRegistry $doctrine): Response
-    {
-
+    public function foodFunctions(Request $request, ManagerRegistry $doctrine): Response
+    {   
+        $entityManager = $doctrine->getManager();
+        
+        //create new food and add to database
         $food = new Food();
         $form = $this->createForm(AddFoodType::class, $food);
 
         $form->handleRequest($request);
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             $food = $form->getData();
-            $entityManager = $doctrine->getManager();
             $entityManager->persist($food);
             $entityManager->flush();
 
             $notice='New Food named '.$food->getName().' added';
+
             $this->addFlash('notice', $notice);
-            dd($food);
             return $this->redirectToRoute('app_food');
         }
 
+        
+        
+        //search for food from the database
+       
+        $form2 = $this->createForm(SearchFoodType::class);
+        $form2->handleRequest($request);
 
-        return $this->render('food/index.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
+        $searchdata = $entityManager->getRepository(Food::class)->findAll();
 
-    /**
-     * @Route("/food/search", name="app_food_search")
-     */
-    public function searchFood(Request $request, ManagerRegistry $doctrine): Response
-    {
-        $form = $this->createForm(SearchType::class);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $data = $form->getData();
+        if($form2->isSubmitted() && $form2->isValid()){
+            $data = $form2->getData();
 
             foreach ($data as $key => $value) {
                 if($value == null){
                     unset($data[$key]);
                 }
             }
-
-            $entityManager = $doctrine->getManager();
+            $searchdata = $entityManager->getRepository(Food::class)->findBy($data);
             
-            $foods = $entityManager->getRepository(Food::class)->findBy($data);
             
-            dd($foods);
+            return $this->render('food/index.html.twig',[
+                'form' => $form->createView(),
+                'form2' => $form2->createView(),    
+                'searchdata' => $searchdata
+            ]);
 
-            return $form;
+            
+
         }
 
-        return $this->render('food/index.html.twig');
+        else
+        {
+            return $this->render('food/index.html.twig', [
+            'form' => $form->createView(),
+            'form2' => $form2->createView(),
+            'searchdata' => $searchdata
+        ]);
+        }
+
     }
 
-    public function renderPage()
+
+    /**
+     * @Route("/update/{id}", name="update")
+     */
+
+    public function update(Request $request, ManagerRegistry $doctrine, $id)
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+       $entityManager = $doctrine->getManager();
+       $fooddata = $entityManager->getRepository(Food::class)->find($id);
+       $form = $this->createForm(AddFoodType::class, $fooddata); 
+       $form->handleRequest($request);
 
-        return $this->render('food/index.html.twig');
+       if ($form->isSubmitted() && $form->isValid()) {
+
+           $entityManager = $doctrine->getManager();
+           $fooddata = $form->getData();
+
+           // tell Doctrine you want to (eventually) save the userinfo (no queries yet)
+           $entityManager->persist($fooddata);
+
+           // actually executes the queries (i.e. the INSERT query)
+           $entityManager->flush();
+
+           $this->addFlash('notice','Updated Successfully!!');
+
+           return $this->redirectToRoute('app_food');
+       }
+
+       return $this->render('/food/update.html.twig',[
+
+           'form' => $form->createView(),
+
+       ]);
+
     }
 
+    
+    /**
+     * @Route("/delete/{id}", name="delete")
+     */
+    
+    public function delete(Request $request, ManagerRegistry $doctrine, $id){
+       
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+       $entityManager = $doctrine->getManager();
+       $fooddata = $entityManager->getRepository(Food::class)->find($id);
+       
+       $entityManager->remove($fooddata);
+       $entityManager->flush();
+
+       $this->addFlash('notice','Deleted Successfully!!');
+       return $this->redirectToRoute('app_food');
+
+
+
+    }
 
 }

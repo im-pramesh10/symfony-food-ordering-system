@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+
+{% block title %}My Cart{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="card col-sm-8">
+            <div class="card-body">
+                <h5 class="card-title">My Cart</h5>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Food</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cartitem in cart %}
+                            <tr>
+                                <td scope='col'>{{ cartitem.name }}</td>
+                                <td>{{ cartitem.price }}</td>
+                                <td>{{ cartitem.quantity }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <form action="">
+                                <td><input type="text" placeholder="Enter Address" required></td>
+                                <td><button class="btn btn-danger" type="submit">Checkout</button></td>
+                            </form>
+                        </tr>
+                    </tbody>
+                </table>
+                      
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

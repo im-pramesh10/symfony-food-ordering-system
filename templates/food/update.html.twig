@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Update Food{% endblock %}
+
+{% block body %}
+    <div class="container pt-5">
+
+        <div class="row pb-2 pt-2 bg-secondary text-white mb-2">
+
+                <div>{{ form_start(form) }}</div>
+                <div class="col-sm-1"><h5>Update</h5></div>
+                <div class="col-sm-2">{{ form_widget(form.name) }}</div>
+                <div class="col-sm-2">{{ form_widget(form.price) }}</div>
+                <div class="col-sm-2"></div>
+                <div class="col-sm-2">{{ form_widget(form.submit) }}</div>
+                <div>{{ form_end(form) }}</div>
+            
+        </div>
+    </div>
+{% endblock %}
