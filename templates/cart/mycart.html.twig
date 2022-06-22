@@ -17,6 +17,7 @@
                             <th scope="col">Food</th>
                             <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,14 +26,22 @@
                                 <td scope='col'>{{ cartitem.name }}</td>
                                 <td>{{ cartitem.price }}</td>
                                 <td>{{ cartitem.quantity }}</td>
+                                <td><a href="{{ path('app_remove_from_cart', {'id': cartitem.id}) }}" class="btn btn-danger">Remove</a></td>
                             </tr>
                         {% endfor %}
+
+                        {% if form != null %}
                         <tr>
-                            <form action="">
-                                <td><input type="text" placeholder="Enter Address" required></td>
-                                <td><button class="btn btn-danger" type="submit">Checkout</button></td>
-                            </form>
+                            {{ form_start(form) }}
+                                <td>{{ form_widget(form.address) }}</td>
+                                <td>{{ form_widget(form.Checkout) }}</td>
+                            {{ form_end(form) }}
                         </tr>
+                        {% else %}
+                        <tr class="text-center">
+                            YOUR CART IS EMPTY
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
                       

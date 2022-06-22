@@ -45,7 +45,7 @@ class Orders
     private $paymentStatus;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="orders", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="orders", orphanRemoval=true)
      */
     private $orderDetails;
 
