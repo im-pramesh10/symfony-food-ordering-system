@@ -35,7 +35,7 @@ security:
         - { path: ^/update, roles: ROLE_ADMIN }
         - { path: ^/delete, roles: ROLE_ADMIN }
         - { path: ^/food, roles: ROLE_USER }
-        - { path: ^/addtocart, roles: ROLE_USER }
+        - { path: ^/cart, roles: ROLE_USER }
 
 when@test:
     security:

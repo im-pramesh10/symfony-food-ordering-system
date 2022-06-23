@@ -87,6 +87,7 @@ class CartController extends AbstractController
             }
             
             //dd($sessiondata);
+            return $this->redirectToRoute('app_food');
         }
         return $this->render('cart/index.html.twig', [
             'form' => $form->createView(),
@@ -202,7 +203,7 @@ class CartController extends AbstractController
 
         $session->remove('carts');
         $session->clear();
-        
+
         return $this->redirectToRoute('app_my_cart');
 
     }

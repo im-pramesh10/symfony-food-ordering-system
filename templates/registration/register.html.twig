@@ -3,15 +3,41 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
-     {% for message in app.flashes('notice') %} <!-- Displaying flash with notice-->
-                <div class="alert alert-danger">
-                        {{ message }}
-                </div>
-                {% endfor %}
+    
 
-    {{ form_start(registrationForm) }}
+
+
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
       
-      {{ form(registrationForm) }}
-    {{ form_end(registrationForm) }}
+
+    <div class="col col-xl-12">
+        <div class="card text-align-center text-white mt-2" style="border-radius: 1rem; background-color: #005856;">
+        <h1 class="card-header mt-2 text-white">Register</h1>
+          <div class="card-body p-4 p-lg-5 text-black">
+
+                                
+                      {% for message in app.flashes('notice') %} <!-- Displaying flash with notice-->
+                                  <div class="alert alert-danger">
+                                          {{ message }}
+                                  </div>
+                                  {% endfor %}
+
+                      {{ form_start(registrationForm) }}
+                        
+                        {{ form_widget(registrationForm.firstName) }}
+                        {{ form_widget(registrationForm.lastName) }}
+                        {{ form_widget(registrationForm.phone) }}
+                        {{ form_widget(registrationForm.email) }}
+                        {{ form_widget(registrationForm.username) }}
+                        {{ form_widget(registrationForm.plainPassword) }}
+                        {{ form_widget(registrationForm.confirmPassword) }}
+
+                      {{ form_end(registrationForm) }}
+                
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 {% endblock %}
