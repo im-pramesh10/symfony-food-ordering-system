@@ -141,6 +141,8 @@ class CartController extends AbstractController
                 //dd('hello submitted and valid');
                 $formdata = $form->getData();
                 $this->checkout($formdata, $cartitems);
+
+                return $this->redirectToRoute('app_my_cart');
             }
 
             return $this->render('cart/mycart.html.twig',[
