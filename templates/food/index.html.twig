@@ -2,41 +2,15 @@
 
 {% block title %}Food{% endblock %}
 
-{% block body %}
-       
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Food Order System</a>
-    <ul class="navbar-nav mr-auto">
-
-                <div>{{ form_start(form2) }}</div>
+{% block search %}<div>{{ form_start(form2) }}</div>
                 <div class="col-sm-2 m-1">{{ form_widget(form2.id) }}</div>
                 <div class="col-sm-2 m-1">{{ form_widget(form2.name) }}</div>
                 <div class="col-sm-2 m-1">{{ form_widget(form2.price) }}</div>
                 <div class="col-sm-2 m-1">{{ form_widget(form2.search) }}</div>
                 <div>{{ form_end(form2) }}</div>
+{% endblock %}
 
-                <li class="nav-item active">
-        <a class="nav-link" href="{{ path('app_food') }}">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">My Orders</a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_my_cart') }}">My Cart</a>
-      </li>
-
-      <li class="nav-item">
-            {% if app.user %}
-            
-            <a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
-    
-            {% endif %}
-        </li>
-    </ul>
-  </div>
-</nav>
+{% block body %}
 
     <div class="container pt-5">
     
@@ -71,7 +45,7 @@
 
                
                     
-                        <div class="card col-sm-3 m-1 text-white" style="background-color: #005856;">
+                        <div class="card col-sm-3 text-white" style="background-color: #005856;">
                             <div class="card-header"><h5>{{ data.name }}</h5></div>
                             <div class="card-body">    
                                 <p class="card-text">ID: {{ data.id }}</p>

@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block body %}
+{% for order in orderlist %}
+<div class="row">
+<div class="col-sm-6 my-1">
+    <div class="card">
+        <div class="card-header">
+        <h5>Order ID: {{ order.id }}</h5>
+        </div>
+        <div class="card-body">
+        <p>Date: {{ order.date }}</p>
+        <p>Total Price: {{ order.totalPrice }}</p>
+        <p>Address: {{ order.address }}</p>
+
+        {% if is_granted('ROLE_ADMIN') %}
+        {% set user = order.getUsers %}
+            <p>Ordered By: @{{ user.username }} ({{ user.getFirstName }} {{ user.getLastName }}) </p>    
+        {% endif %}
+    
+        <p>Delivery Status: {{ order.deliveryStatus }}</p>
+        <p>Payment Status: {{ order.paymentStatus }}</p>
+        </div>
+        <div class="card-footer">
+        
+        </div>
+    </div>
+</div>
+<div class="col-sm-6 my-1">
+    <div class="card">
+        <div class="card-header">
+        <h5>Order Id {{ order.id }}'s Details</h5>
+        </div>
+        <div class="card-body">
+            {% set orderdetail = order.getOrderDetails.getValues %}
+            
+
+                <table class="table table-striped">
+                    <tr>
+                        <th>Food</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+            {% for detail in orderdetail %}
+                {%  set food = detail.getFood %}
+                    <tr>
+                        <td>{{ food.name }}</td>
+                        <td>{{ food.price }}</td>
+                        <td>{{ detail.quantity }}</td>
+                    </tr>
+            {% endfor %}
+                </table>
+
+            
+        </div>
+        </div>
+        <div class="card-footer">
+        
+        </div>
+    </div>
+</div>
+</div>
+{% endfor %}
+{% endblock %}

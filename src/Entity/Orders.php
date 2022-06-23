@@ -81,9 +81,10 @@ class Orders
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?string
     {
-        return $this->date;
+        $result = $this->date->format('Y-m-d H:i:s');
+        return $result;
     }
 
     public function setDate(\DateTimeInterface $date): self
