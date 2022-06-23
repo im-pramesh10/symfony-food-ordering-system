@@ -9,17 +9,15 @@
     <div class="card">
         <div class="card-header">
         <h5>Order ID: {{ order.id }}</h5>
+        {% if is_granted('ROLE_ADMIN') %}
+        {% set user = order.getUsers %}
+            <strong>Ordered By: @{{ user.username }} ({{ user.getFirstName }} {{ user.getLastName }}) </strong>    
+        {% endif %}
         </div>
         <div class="card-body">
         <p>Date: {{ order.date }}</p>
         <p>Total Price: {{ order.totalPrice }}</p>
         <p>Address: {{ order.address }}</p>
-
-        {% if is_granted('ROLE_ADMIN') %}
-        {% set user = order.getUsers %}
-            <p>Ordered By: @{{ user.username }} ({{ user.getFirstName }} {{ user.getLastName }}) </p>    
-        {% endif %}
-    
         <p>Delivery Status: {{ order.deliveryStatus }}</p>
         <p>Payment Status: {{ order.paymentStatus }}</p>
         </div>
