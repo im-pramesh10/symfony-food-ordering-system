@@ -30,7 +30,7 @@ class Food
     private $price;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="food")
+     * @ORM\OneToMany(targetEntity=OrderDetails::class, cascade={"remove"}, mappedBy="food")
      */
     private $orderDetails;
 
