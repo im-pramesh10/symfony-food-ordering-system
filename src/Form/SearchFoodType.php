@@ -14,11 +14,10 @@ class SearchFoodType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id',NumberType::class, ['attr'=> array('placeholder'=>'id', 'class'=>'form-control mb-1'), 'required'=>false])
-            ->add('name',TextType::class, ['attr'=> array('placeholder'=>'Name', 'class'=>'form-control mb-1'), 'required'=>false])
-            ->add('price', NumberType::class, ['attr'=> array('placeholder'=>'Price', 'class'=>'form-control mb-1'), 'required'=>false])
-            ->add('search',SubmitType::class,['attr'=>array('class'=>'btn btn-primary text-white mb-1')])
-        ;
+            ->add('id', NumberType::class, ['attr' => array('placeholder' => 'id', 'class' => 'form-control mb-1'), 'required' => false])
+            ->add('name', TextType::class, ['attr' => array('placeholder' => 'Search By Food Name', 'class' => 'form-control mb-1'), 'required' => false])
+            ->add('price', NumberType::class, ['attr' => array('placeholder' => 'Price', 'class' => 'form-control mb-1'), 'required' => false])
+            ->add('search', SubmitType::class, ['attr' => array('class' => 'btn btn-primary text-white mb-1')]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

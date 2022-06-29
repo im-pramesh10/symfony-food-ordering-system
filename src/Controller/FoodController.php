@@ -18,66 +18,59 @@ class FoodController extends AbstractController
      * @Route("/food", name="app_food")
      */
     public function foodFunctions(Request $request, ManagerRegistry $doctrine): Response
-    {   
+    {
         $entityManager = $doctrine->getManager();
-        
+
         //create new food and add to database
         $food = new Food();
         $form = $this->createForm(AddFoodType::class, $food);
 
         $form->handleRequest($request);
-        
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $food = $form->getData();
             $entityManager->persist($food);
             $entityManager->flush();
 
-            $notice='New Food named '.$food->getName().' added';
+            $notice = 'New Food named ' . $food->getName() . ' added';
 
             $this->addFlash('notice', $notice);
             return $this->redirectToRoute('app_food');
         }
 
-        
-        
+
+
         //search for food from the database
-       
+
         $form2 = $this->createForm(SearchFoodType::class);
         $form2->handleRequest($request);
 
         $searchdata = $entityManager->getRepository(Food::class)->findAll();
 
-        if($form2->isSubmitted() && $form2->isValid()){
+        if ($form2->isSubmitted() && $form2->isValid()) {
             $data = $form2->getData();
 
             foreach ($data as $key => $value) {
-                if($value == null){
+                if ($value == null) {
                     unset($data[$key]);
                 }
             }
             $searchdata = $entityManager->getRepository(Food::class)->findBy($data);
-            
-            
-            return $this->render('food/index.html.twig',[
+
+
+            return $this->render('food/index.html.twig', [
                 'form' => $form->createView(),
-                'form2' => $form2->createView(),    
+                'form2' => $form2->createView(),
                 'searchdata' => $searchdata
             ]);
-
-            
-
-        }
-
-        else
-        {
+        } else {
             return $this->render('food/index.html.twig', [
-            'form' => $form->createView(),
-            'form2' => $form2->createView(),
-            'searchdata' => $searchdata
-        ]);
+                'form' => $form->createView(),
+                'form2' => $form2->createView(),
+                'searchdata' => $searchdata
+            ]);
         }
-
     }
 
     /**
@@ -87,15 +80,15 @@ class FoodController extends AbstractController
     {
         $entityManager = $doctrine->getManager();
 
-       
-            if($request->get('value')){
-                $value = $request->get('value');
 
-                $foods = $entityManager->getRepository(Food::class)->findLike($value);
-                //echo("<p>".$value."</p>");
-                
-                        
-         /* $jsonData = array();  
+        if ($request->get('value')) {
+            $value = $request->get('value');
+
+            $foods = $entityManager->getRepository(Food::class)->findLike($value); //userdefined function in the repository
+            //echo("<p>".$value."</p>");
+
+
+            /* $jsonData = array();  
             $idx = 0;  
             foreach($foods as $food) {  
                $temp = array(
@@ -106,14 +99,13 @@ class FoodController extends AbstractController
                $jsonData[$idx++] = $temp;  
             }*/
             return new JsonResponse([
-                'html'=> $this->renderView('food/cardtemplate.html.twig', ['searchdata' => $foods])
-            ]); 
-         }
-         else{
+                'html' => $this->renderView('food/cardtemplate.html.twig', ['searchdata' => $foods])
+            ]);
+        } else {
 
-         return $this->render('food/search.html.twig');
+            return $this->render('base.html.twig');
+        }
     }
-}
 
 
     /**
@@ -123,55 +115,51 @@ class FoodController extends AbstractController
     public function update(Request $request, ManagerRegistry $doctrine, $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-       $entityManager = $doctrine->getManager();
-       $fooddata = $entityManager->getRepository(Food::class)->find($id);
-       $form = $this->createForm(AddFoodType::class, $fooddata); 
-       $form->handleRequest($request);
+        $entityManager = $doctrine->getManager();
+        $fooddata = $entityManager->getRepository(Food::class)->find($id);
+        $form = $this->createForm(AddFoodType::class, $fooddata);
+        $form->handleRequest($request);
 
-       if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-           $entityManager = $doctrine->getManager();
-           $fooddata = $form->getData();
+            $entityManager = $doctrine->getManager();
+            $fooddata = $form->getData();
 
-           // tell Doctrine you want to (eventually) save the userinfo (no queries yet)
-           $entityManager->persist($fooddata);
+            // tell Doctrine you want to (eventually) save the userinfo (no queries yet)
+            $entityManager->persist($fooddata);
 
-           // actually executes the queries (i.e. the INSERT query)
-           $entityManager->flush();
+            // actually executes the queries (i.e. the INSERT query)
+            $entityManager->flush();
 
-           $this->addFlash('notice','Updated Successfully!!');
+            $this->addFlash('notice', 'Updated Successfully!!');
 
-           return $this->redirectToRoute('app_food');
-       }
+            return $this->redirectToRoute('app_food');
+        }
 
-       return $this->render('/food/update.html.twig',[
+        return $this->render('/food/update.html.twig', [
 
-           'form' => $form->createView(),
+            'form' => $form->createView(),
 
-       ]);
-
+        ]);
     }
 
-    
+
     /**
      * @Route("/delete/{id}", name="delete")
      */
-    
-    public function delete(Request $request, ManagerRegistry $doctrine, $id){
-       
+
+    public function delete(Request $request, ManagerRegistry $doctrine, $id)
+    {
+
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-       $entityManager = $doctrine->getManager();
-       $fooddata = $entityManager->getRepository(Food::class)->find($id);
-       
-       $entityManager->remove($fooddata);
-       $entityManager->flush();
+        $entityManager = $doctrine->getManager();
+        $fooddata = $entityManager->getRepository(Food::class)->find($id);
 
-       $this->addFlash('notice','Deleted Successfully!!');
-       return $this->redirectToRoute('app_food');
+        $entityManager->remove($fooddata);
+        $entityManager->flush();
 
-
-
+        $this->addFlash('notice', 'Deleted Successfully!!');
+        return $this->redirectToRoute('app_food');
     }
-
 }

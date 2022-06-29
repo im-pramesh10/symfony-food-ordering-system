@@ -1,54 +1,55 @@
 {% extends "base.html.twig" %}
 
-{% block title %}My Cart{% endblock %}
+{% block title %}My Cart
+{% endblock %}
 
 {% block body %}
 
 
+	<div class="container">
+		<div class="row">
+			<div class="card col-sm-8">
+				<div class="card-body">
+					<h5 class="card-title">My Cart</h5>
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th scope="col">Food</th>
+								<th scope="col">Price</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for cartitem in cart %}
+								<tr>
+									<td scope='col'>{{ cartitem.name }}</td>
+									<td>{{ cartitem.price }}</td>
+									<td>{{ cartitem.quantity }}</td>
+									<td>
+										<a href="{{ path('app_remove_from_cart', {'id': cartitem.id}) }}" class="btn btn-danger">Remove</a>
+									</td>
+								</tr>
+							{% endfor %}
 
-<div class="container">
-    <div class="row">
-        <div class="card col-sm-8">
-            <div class="card-body">
-                <h5 class="card-title">My Cart</h5>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Food</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cartitem in cart %}
-                            <tr>
-                                <td scope='col'>{{ cartitem.name }}</td>
-                                <td>{{ cartitem.price }}</td>
-                                <td>{{ cartitem.quantity }}</td>
-                                <td><a href="{{ path('app_remove_from_cart', {'id': cartitem.id}) }}" class="btn btn-danger">Remove</a></td>
-                            </tr>
-                        {% endfor %}
+							{% if form != null %}
+								<tr>
+									{{ form_start(form) }}
+									<td>{{ form_widget(form.address) }}</td>
+									<td>{{ form_widget(form.Checkout) }}</td>
+									{{ form_end(form) }}
+								</tr>
+							{% else %}
+								<tr class="text-center">
+									YOUR CART IS EMPTY
+								</tr>
+							{% endif %}
+						</tbody>
+					</table>
 
-                        {% if form != null %}
-                        <tr>
-                            {{ form_start(form) }}
-                                <td>{{ form_widget(form.address) }}</td>
-                                <td>{{ form_widget(form.Checkout) }}</td>
-                            {{ form_end(form) }}
-                        </tr>
-                        {% else %}
-                        <tr class="text-center">
-                            YOUR CART IS EMPTY
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-                      
-        </div>
-    </div>
-</div>
+				</div>
+			</div>
+		</div>
 
 
-
-{% endblock %}
+	{% endblock %}

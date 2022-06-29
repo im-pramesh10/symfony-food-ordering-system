@@ -1,129 +1,113 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Food{% endblock %}
+{% block title %}Food
+{% endblock %}
 
-{% block search %}<div>{{ form_start(form2) }}</div>
-                <div class="col-sm-2 m-1">{{ form_widget(form2.id) }}</div>
-                <div class="col-sm-2 m-1">{{ form_widget(form2.name) }}</div>
-                <div class="col-sm-2 m-1">{{ form_widget(form2.price) }}</div>
-                <div class="col-sm-2 m-1">{{ form_widget(form2.search) }}</div>
-                <div>{{ form_end(form2) }}</div>
+{% block search %}
+	<div>{{ form_start(form2) }}</div>
+	<!-- <div class="col-sm-2 m-1">{{ form_widget(form2.id) }}</div> -->
+	<div class="m-1">{{ form_widget(form2.name) }}</div>
+	<!-- <div class="col-sm-2 m-1">{{ form_widget(form2.price) }}</div> -->
+	<div class="col-sm-2 m-1">{{ form_widget(form2.search) }}</div>
+	<div>{{ form_end(form2) }}</div>
 {% endblock %}
 
 {% block javascripts %}
 
-<script language = "javascript" type = "text/javascript">
- 
- $(document).ready(function(){     
-            $("#search_food_name").keyup(function(){
-                let value = $(this).val();
-                //alert(value);
+	<script language="javascript" type="text/javascript">
 
-                if (value != ""){
-                    $.ajax({
+		$(document).ready(function () {
+$("#search_food_name").keyup(function () {
+let value = $(this).val();
+// alert(value);
 
-                        url:"/search",
-                        method:"POST",
-                        
-                        data:{value:value},
+if (value != "") {
+$.ajax({
 
-                        success: function(data){
-                           //alert(value);
-                           console.log(data);
-                           $("#cardholder").html(data.html);
-                        }
+url: "/search",
+method: "POST",
 
-                    });
-                }
-                else{
-                        $("#result").css("display","none");
-                }
-            }
-            
-            );
-         
- 
-        });
+data: {
+value: value
+},
+
+success: function (data) { // alert(value);
+console.log(data);
+$("#cardholder").html(data.html);
+}
+
+});
+} else { // $("#cardholder").css("display","none");
+}
+});
 
 
-</script>
+});
+	</script>
 
 {% endblock %}
 
 {% block body %}
 
-    <div class="container pt-5">
-    
-    {% if is_granted('ROLE_ADMIN') %}
+	{% if is_granted('ROLE_ADMIN') %}
 
-        <div class="row pb-2 pt-2 bg-secondary text-white mb-2">
-          
-            {% for message in app.flashes('notice') %} <!-- Displaying flash with notice-->
-                <div class="alert alert-success">
-                        {{ message }}
-                </div>
-                {% endfor %}
+		<div class="row pb-2 pt-2 bg-secondary text-white mb-2">
 
-                <div>{{ form_start(form) }}</div>
-                <div class="col-sm-1"><h5>Add</h5></div>
-                <div class="col-sm-2">{{ form_widget(form.name) }}
-                    
-                    <datalist id="foodNameList">
-                    
-                        
+			{% for message in app.flashes('notice') %}
+				<!-- Displaying flash with notice-->
+				<div class="alert alert-success">
+					{{ message }}
+				</div>
+			{% endfor %}
 
-                    </datalist>
+			<div>{{ form_start(form) }}</div>
+			<div class="col-sm-1">
+				<h5>Add</h5>
+			</div>
+			<div class="col-sm-2">{{ form_widget(form.name) }}
+			</div>
+			<div class="col-sm-2">{{ form_widget(form.price) }}</div>
+			<div class="col-sm-2"></div>
+			<div class="col-sm-2">{{ form_widget(form.submit) }}</div>
+			<div>{{ form_end(form) }}</div>
 
-                
-                </div>
-                <div class="col-sm-2">{{ form_widget(form.price) }}</div>
-                <div class="col-sm-2"></div>
-                <div class="col-sm-2">{{ form_widget(form.submit) }}</div>
-                <div>{{ form_end(form) }}</div>
-            
-        </div>
+		</div>
 
-    {% endif %}
+	{% endif %}
 
-        <div class="row" id="cardholder">
-        {% for data in searchdata %}
+	<div class="row" id="cardholder">
+		{% for data in searchdata %}
 
-            
-            
-            
 
-               
-                    
-                        <div class="card col-sm-3 text-white" style="background-color: #005856;">
-                            <div class="card-header"><h5>{{ data.name }}</h5></div>
-                            <div class="card-body">    
-                                <p class="card-text">ID: {{ data.id }}</p>
-                                <p class="card-text">Price: {{ data.price }}</p>
-                            </div>
-                            
-                            {% set adminflag = 0 %}
-                            {% if is_granted('ROLE_ADMIN') %}
-                            <div class="card-footer">
-                                <a href="{{ path('update', {'id': data.id}) }}" class="btn btn-warning">Edit</a>
-                                <a href="{{ path('delete', {'id': data.id}) }}" class="btn btn-danger">Delete</a>
-                            </div>
-                            {% set adminflag = 1 %}
-                            {% endif %}
+			<div class="card col-sm-3 text-white" style="background-color: #005856;">
+				<div class="card-header">
+					<h5>{{ data.name }}</h5>
+				</div>
+				<div class="card-body">
+					<p class="card-text">ID:
+						{{ data.id }}</p>
+					<p class="card-text">Price:
+						{{ data.price }}</p>
+				</div>
 
-                            {% if (is_granted('ROLE_USER')) and (adminflag == 0) %}
-                            <div class="card-footer">
-                                <a href="{{ path('app_cart', {'id': data.id}) }}" class="btn btn-md btn-danger">ADD</a>
-                            </div>
-                            {% endif %}
-                            
-                        </div>
-                    
-                
-                
-               
-           
-            
-        {% endfor %}
-        </div>
-    </div>
-{% endblock %}
+				{% set adminflag = 0 %}
+				{% if is_granted('ROLE_ADMIN') %}
+					<div class="card-footer">
+						<a href="{{ path('update', {'id': data.id}) }}" class="btn btn-warning">Edit</a>
+						<a href="{{ path('delete', {'id': data.id}) }}" class="btn btn-danger">Delete</a>
+					</div>
+					{% set adminflag = 1 %}
+				{% endif %}
+
+				{% if (is_granted('ROLE_USER')) and (adminflag == 0) %}
+					<div class="card-footer">
+						<a href="{{ path('app_cart', {'id': data.id}) }}" class="btn btn-md btn-danger">ADD</a>
+					</div>
+				{% endif %}
+
+			</div>
+
+
+		{% endfor %}
+	</div>
+</div>{% endblock %}
