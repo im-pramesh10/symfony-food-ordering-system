@@ -37,7 +37,7 @@ $("#cardholder").html(data.html);
 }
 
 });
-} else { // $("#cardholder").css("display","none");
+} else { // $("#cardholder").html(<p class=" strong ">Not Found</p>);
 }
 });
 
@@ -48,7 +48,7 @@ $("#cardholder").html(data.html);
 {% endblock %}
 
 {% block body %}
-
+	<p class="strong"></p>
 	{% if is_granted('ROLE_ADMIN') %}
 
 		<div class="row pb-2 pt-2 bg-secondary text-white mb-2">
@@ -75,39 +75,42 @@ $("#cardholder").html(data.html);
 
 	{% endif %}
 
-	<div class="row" id="cardholder">
-		{% for data in searchdata %}
+	<div class="container">
+
+		<div class="row" id="cardholder">
+			{% for data in searchdata %}
 
 
-			<div class="card col-sm-3 text-white" style="background-color: #005856;">
-				<div class="card-header">
-					<h5>{{ data.name }}</h5>
-				</div>
-				<div class="card-body">
-					<p class="card-text">ID:
-						{{ data.id }}</p>
-					<p class="card-text">Price:
-						{{ data.price }}</p>
-				</div>
-
-				{% set adminflag = 0 %}
-				{% if is_granted('ROLE_ADMIN') %}
-					<div class="card-footer">
-						<a href="{{ path('update', {'id': data.id}) }}" class="btn btn-warning">Edit</a>
-						<a href="{{ path('delete', {'id': data.id}) }}" class="btn btn-danger">Delete</a>
+				<div class="card col-sm-3 text-white" style="background-color: #005856;">
+					<div class="card-header">
+						<h5>{{ data.name }}</h5>
 					</div>
-					{% set adminflag = 1 %}
-				{% endif %}
-
-				{% if (is_granted('ROLE_USER')) and (adminflag == 0) %}
-					<div class="card-footer">
-						<a href="{{ path('app_cart', {'id': data.id}) }}" class="btn btn-md btn-danger">ADD</a>
+					<div class="card-body">
+						<p class="card-text">ID:
+							{{ data.id }}</p>
+						<p class="card-text">Price:
+							{{ data.price }}</p>
 					</div>
-				{% endif %}
 
-			</div>
+					{% set adminflag = 0 %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<div class="card-footer">
+							<a href="{{ path('update', {'id': data.id}) }}" class="btn btn-warning">Edit</a>
+							<a href="{{ path('delete', {'id': data.id}) }}" class="btn btn-danger">Delete</a>
+						</div>
+						{% set adminflag = 1 %}
+					{% endif %}
+
+					{% if (is_granted('ROLE_USER')) and (adminflag == 0) %}
+						<div class="card-footer">
+							<a href="{{ path('app_cart', {'id': data.id}) }}" class="btn btn-md btn-danger">ADD</a>
+						</div>
+					{% endif %}
+
+				</div>
 
 
-		{% endfor %}
+			{% endfor %}
+		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}
