@@ -7,6 +7,7 @@ use App\Form\AddFoodType;
 use App\Form\SearchFoodType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -78,6 +79,41 @@ class FoodController extends AbstractController
         }
 
     }
+
+    /**
+     * @Route("/search", name="app_search")
+     */
+    public function search(Request $request, ManagerRegistry $doctrine)
+    {
+        $entityManager = $doctrine->getManager();
+
+       
+            if($request->get('value')){
+                $value = $request->get('value');
+
+                $foods = $entityManager->getRepository(Food::class)->findLike($value);
+                //echo("<p>".$value."</p>");
+                
+                        
+         /* $jsonData = array();  
+            $idx = 0;  
+            foreach($foods as $food) {  
+               $temp = array(
+                  'id' => $food->getId(),
+                  'name' => $food->getName(),  
+                  'price' => $food->getPrice(),  
+               );   
+               $jsonData[$idx++] = $temp;  
+            }*/
+            return new JsonResponse([
+                'html'=> $this->renderView('food/cardtemplate.html.twig', ['searchdata' => $foods])
+            ]); 
+         }
+         else{
+
+         return $this->render('food/search.html.twig');
+    }
+}
 
 
     /**

@@ -10,6 +10,46 @@
                 <div>{{ form_end(form2) }}</div>
 {% endblock %}
 
+{% block javascripts %}
+
+<script language = "javascript" type = "text/javascript">
+ 
+ $(document).ready(function(){     
+            $("#search_food_name").keyup(function(){
+                let value = $(this).val();
+                //alert(value);
+
+                if (value != ""){
+                    $.ajax({
+
+                        url:"/search",
+                        method:"POST",
+                        
+                        data:{value:value},
+
+                        success: function(data){
+                           //alert(value);
+                           console.log(data);
+                           $("#cardholder").html(data.html);
+                        }
+
+                    });
+                }
+                else{
+                        $("#result").css("display","none");
+                }
+            }
+            
+            );
+         
+ 
+        });
+
+
+</script>
+
+{% endblock %}
+
 {% block body %}
 
     <div class="container pt-5">
@@ -26,7 +66,16 @@
 
                 <div>{{ form_start(form) }}</div>
                 <div class="col-sm-1"><h5>Add</h5></div>
-                <div class="col-sm-2">{{ form_widget(form.name) }}</div>
+                <div class="col-sm-2">{{ form_widget(form.name) }}
+                    
+                    <datalist id="foodNameList">
+                    
+                        
+
+                    </datalist>
+
+                
+                </div>
                 <div class="col-sm-2">{{ form_widget(form.price) }}</div>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-2">{{ form_widget(form.submit) }}</div>
@@ -36,7 +85,7 @@
 
     {% endif %}
 
-        <div class="row">
+        <div class="row" id="cardholder">
         {% for data in searchdata %}
 
             

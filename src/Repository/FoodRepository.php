@@ -63,4 +63,13 @@ class FoodRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findLike($value): array
+    {
+
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT f FROM \App\Entity\Food f WHERE f.name LIKE '".$value."%'");
+        $foods = $query->getResult();
+        return $foods;
+    }
 }
